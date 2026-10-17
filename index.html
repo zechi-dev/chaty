@@ -3,29 +3,79 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chaty App - WhatsApp Clone</title>
+<title>Chaty App</title>
 <meta name="theme-color" content="#00a884">
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');*{font-family:Inter,sans-serif}</style>
+<style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap');*{font-family:Inter,sans-serif}</style>
 </head>
 <body class="bg-[#111b21] h-screen flex flex-col overflow-hidden">
 
 <div id="authScreen" class="fixed inset-0 bg-[#111b21] z-[100] flex items-center justify-center p-6">
 <div class="w-full max-w-sm">
-<div class="text-center mb-8"><div class="w-20 h-20 bg-[#00a884] rounded-full flex items-center justify-center mx-auto text-3xl font-bold text-white">C</div><h1 class="text-white text-3xl font-bold mt-4">Chaty App</h1><p class="text-[#8696a0] text-sm">WhatsApp Clone</p></div>
-<div id="loginBox" class="space-y-3"><input id="loginEmail" type="email" placeholder="Email" class="w-full bg-[#202c33] text-white p-3.5 rounded-lg outline-none"><input id="loginPass" type="password" placeholder="Password" class="w-full bg-[#202c33] text-white p-3.5 rounded-lg outline-none"><button id="loginBtn" class="w-full bg-[#00a884] text-white p-3.5 rounded-lg font-semibold">Login</button><p class="text-center text-[#8696a0] text-sm">No account? <span id="toRegister" class="text-[#53bdeb] cursor-pointer">Register</span></p></div>
-<div id="registerBox" class="space-y-3 hidden"><input id="regName" type="text" placeholder="Full Name" class="w-full bg-[#202c33] text-white p-3.5 rounded-lg"><input id="regEmail" type="email" placeholder="Email" class="w-full bg-[#202c33] text-white p-3.5 rounded-lg"><input id="regPass" type="password" placeholder="Password" class="w-full bg-[#202c33] text-white p-3.5 rounded-lg"><button id="registerBtn" class="w-full bg-[#00a884] text-white p-3.5 rounded-lg font-semibold">Register & Send Code</button><p class="text-center text-[#8696a0] text-sm">Have account? <span id="toLogin" class="text-[#53bdeb] cursor-pointer">Login</span></p></div>
-<div id="verifyBox" class="space-y-3 hidden"><p class="text-white text-center">Code sent to <span id="verifyEmailText" class="font-bold"></span></p><input id="verifyCodeInput" type="text" placeholder="6-digit code" maxlength="6" class="w-full bg-[#202c33] text-white p-3.5 rounded-lg text-center text-2xl tracking-widest"><button id="verifyBtn" class="w-full bg-[#00a884] text-white p-3.5 rounded-lg font-semibold">Verify</button></div>
+<div class="text-center mb-8"><div class="w-20 h-20 bg-[#00a884] rounded-full flex items-center justify-center mx-auto text-3xl font-bold text-white">C</div><h1 class="text-white text-3xl font-bold mt-4">Chaty App</h1></div>
+<div id="loginBox" class="space-y-3"><input id="loginEmail" type="email" placeholder="Email" class="w-full bg-[#202c33] text-white p-3.5 rounded-lg"><input id="loginPass" type="password" placeholder="Password" class="w-full bg-[#202c33] text-white p-3.5 rounded-lg"><button id="loginBtn" class="w-full bg-[#00a884] text-white p-3.5 rounded-lg font-semibold">Login</button><p class="text-center text-[#8696a0] text-sm">No account? <span id="toRegister" class="text-[#53bdeb] cursor-pointer">Register</span></p></div>
+<div id="registerBox" class="space-y-3 hidden"><input id="regName" type="text" placeholder="Full Name" class="w-full bg-[#202c33] text-white p-3.5 rounded-lg"><input id="regEmail" type="email" placeholder="Email" class="w-full bg-[#202c33] text-white p-3.5 rounded-lg"><input id="regPass" type="password" placeholder="Password" class="w-full bg-[#202c33] text-white p-3.5 rounded-lg"><button id="registerBtn" class="w-full bg-[#00a884] text-white p-3.5 rounded-lg font-semibold">Register</button><p class="text-center text-[#8696a0] text-sm">Have account? <span id="toLogin" class="text-[#53bdeb] cursor-pointer">Login</span></p></div>
+<div id="verifyBox" class="space-y-3 hidden"><p class="text-white text-center">Your code is: <span id="verifyEmailText" class="font-bold text-[#00a884] text-xl"></span></p><input id="verifyCodeInput" type="text" placeholder="6-digit code" maxlength="6" class="w-full bg-[#202c33] text-white p-3.5 rounded-lg text-center text-2xl tracking-widest"><button id="verifyBtn" class="w-full bg-[#00a884] text-white p-3.5 rounded-lg font-semibold">Verify</button></div>
 <p id="authError" class="text-red-400 text-sm text-center mt-3 hidden"></p>
 </div>
 </div>
 
 <div id="appScreen" class="hidden h-screen flex-col">
-<div class="bg-[#202c33] text-white p-3 flex items-center justify-between"><div class="flex items-center gap-3"><img id="myAvatar" src="" class="w-10 h-10 rounded-full"><div><h1 class="font-semibold">Chaty</h1><p id="myNameDisplay" class="text-xs text-[#8696a0]"></p></div></div><div class="flex gap-4 text-xl text-[#aebac1]"><i id="btnLogout" class="fa-solid fa-right-from-bracket cursor-pointer"></i></div></div>
+<div class="bg-[#202c33] text-white p-3 flex items-center justify-between"><div class="flex items-center gap-3"><img id="myAvatar" src="" class="w-10 h-10 rounded-full"><div><h1 class="font-semibold">Chaty</h1><p id="myNameDisplay" class="text-xs text-[#8696a0]"></p></div></div><i id="btnLogout" class="fa-solid fa-right-from-bracket cursor-pointer text-xl"></i></div>
 <div class="bg-[#202c33] flex text-[#8696a0] text-sm"><button data-tab="chats" class="tabBtn flex-1 py-3 border-b-2 border-[#00a884] text-white">CHATS</button><button data-tab="status" class="tabBtn flex-1 py-3">STATUS</button><button data-tab="calls" class="tabBtn flex-1 py-3">CALLS</button></div>
 <div class="flex-1 flex overflow-hidden">
 <div id="chatsTab" class="w-full md:w-96 bg-[#111b21] border-r border-[#222d34] flex flex-col"><div id="usersList" class="flex-1 overflow-y-auto"></div></div>
-<div id="chatWindow" class="hidden md:flex flex-1 bg-[#0b141a] flex-col"><div class="bg-[#202c33] p-3 flex items-center justify-between"><div class="flex items-center gap-3"><i id="backToList" class="fa-solid fa-arrow-left md:hidden text-white cursor-pointer"></i><img id="chatAvatar" src="" class="w-10 h-10 rounded-full"><div><p id="chatName" class="text-white font-semibold"></p><p class="text-xs text-[#8696a0]">Tap phone/video to call</p></div></div><div class="flex gap-5 text-[#aebac1] text-xl"><i id="voiceCallBtn" class="fa-solid fa-phone cursor-pointer"></i><i id="videoCallBtn" class="fa-solid fa-video cursor-pointer"></i></div></div><div id="messages" class="flex-1 overflow-y-auto p-4 space-y-1"></div><div class="bg-[#202c33] p-2 flex items-center gap-2"><input id="msgInput" type="text" placeholder="Type a message" class="flex-1 bg-[#2a3942] text-white rounded-full px-4 py-2.5 outline-none"><button id="voiceNoteBtn" class="w-10 h-10 bg-[#2a3942] rounded-full text-[#8696a0]"><i class="fa-solid fa-microphone"></i></button><button id="sendBtn" class="bg-[#00a884] w-10 h-10 rounded-full text-white"><i class="fa-solid fa-paper-plane"></i></button></div></div>
-<div id="statusTab" class="hidden w-full p-4 bg-[#0b141a] overflow-y-auto"><div class="bg-[#202c33] p-3 rounded-lg flex gap-3 items-center mb-4"><img id="statusMyAvatar" src="" class="w-12 h-12 rounded-full"><div class="flex-1"><p class="text-white">My Status</p><p class="text-xs text-[#8696a0]">Add status</p></div><label class="bg-[#00a884] w-8 h-8 rounded-full flex items-center justify-center text-white cursor-pointer"><i class="fa-solid fa-plus"></i><input id="statusFile" type="file" accept="image/*" class="hidden"></label
+<div id="chatWindow" class="hidden md:flex flex-1 bg-[#0b141a] flex-col"><div class="bg-[#202c33] p-3 flex items-center justify-between"><div class="flex items-center gap-3"><i id="backToList" class="fa-solid fa-arrow-left md:hidden text-white cursor-pointer"></i><img id="chatAvatar" src="" class="w-10 h-10 rounded-full"><div><p id="chatName" class="text-white font-semibold"></p></div></div><div class="flex gap-5 text-[#aebac1] text-xl"><i id="voiceCallBtn" class="fa-solid fa-phone cursor-pointer"></i><i id="videoCallBtn" class="fa-solid fa-video cursor-pointer"></i></div></div><div id="messages" class="flex-1 overflow-y-auto p-4 space-y-1"></div><div class="bg-[#202c33] p-2 flex items-center gap-2"><input id="msgInput" type="text" placeholder="Type a message" class="flex-1 bg-[#2a3942] text-white rounded-full px-4 py-2.5 outline-none"><button id="sendBtn" class="bg-[#00a884] w-10 h-10 rounded-full text-white"><i class="fa-solid fa-paper-plane"></i></button></div></div>
+<div id="statusTab" class="hidden w-full p-4 bg-[#0b141a] overflow-y-auto"><div id="statusList"></div></div>
+<div id="callsTab" class="hidden w-full p-4 bg-[#0b141a]"><div id="callsList" class="text-[#8696a0] text-center mt-10">No calls yet</div></div>
+</div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, addDoc, doc, setDoc, getDoc, query, orderBy, onSnapshot, serverTimestamp, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+const firebaseConfig = { apiKey: "AIzaSyA29zVf5kMGWWbf03njNONAl8uzCD2GnYk", authDomain: "chaty-a4725.firebaseapp.com", projectId: "chaty-a4725", storageBucket: "chaty-a4725.firebasestorage.app", messagingSenderId: "1005836465051", appId: "1:1005836465051:web:228af3826e8419ab6fa73e" };
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+let currentUser=null, selectedUser=null, generatedCode=null;
+const authScreen=document.getElementById('authScreen'), appScreen=document.getElementById('appScreen');
+document.getElementById('toRegister').onclick=()=>{document.getElementById('loginBox').classList.add('hidden');document.getElementById('registerBox').classList.remove('hidden');};
+document.getElementById('toLogin').onclick=()=>{document.getElementById('registerBox').classList.add('hidden');document.getElementById('loginBox').classList.remove('hidden');};
+function showError(m){const e=document.getElementById('authError');e.textContent=m;e.classList.remove('hidden');setTimeout(()=>e.classList.add('hidden'),4000);}
+document.getElementById('registerBtn').onclick=async()=>{
+  const name=document.getElementById('regName').value.trim(), email=document.getElementById('regEmail').value.trim(), pass=document.getElementById('regPass').value.trim();
+  if(!name||!email||!pass) return showError("Fill all fields");
+  generatedCode=Math.floor(100000+Math.random()*900000).toString();
+  localStorage.setItem('pending_user',JSON.stringify({name,email,pass}));
+  document.getElementById('registerBox').classList.add('hidden');document.getElementById('verifyBox').classList.remove('hidden');document.getElementById('verifyEmailText').textContent=generatedCode;
+  alert("Your Chaty code: "+generatedCode);
+};
+document.getElementById('verifyBtn').onclick=async()=>{
+  const input=document.getElementById('verifyCodeInput').value.trim();
+  if(input!==generatedCode) return showError("Wrong code. Your code is "+generatedCode);
+  const pending=JSON.parse(localStorage.getItem('pending_user'));
+  await setDoc(doc(db,"users",pending.email), {name:pending.name,email:pending.email,password:pending.pass,avatar:`https://ui-avatars.com/api/?background=00a884&color=fff&name=${encodeURIComponent(pending.name)}`,createdAt:serverTimestamp()});
+  loginUser({name:pending.name,email:pending.email,avatar:`https://ui-avatars.com/api/?background=00a884&color=fff&name=${encodeURIComponent(pending.name)}`});
+};
+document.getElementById('loginBtn').onclick=async()=>{
+  const email=document.getElementById('loginEmail').value.trim(), pass=document.getElementById('loginPass').value.trim();
+  const snap=await getDoc(doc(db,"users",email));
+  if(!snap.exists()) return showError("User not found");
+  if(snap.data().password!==pass) return showError("Wrong password");
+  loginUser(snap.data());
+};
+function loginUser(user){ currentUser=user; localStorage.setItem('chaty_user',JSON.stringify(user)); authScreen.classList.add('hidden'); appScreen.classList.remove('hidden'); appScreen.classList.add('flex'); document.getElementById('myNameDisplay').textContent=user.name; document.getElementById('myAvatar').src=user.avatar; loadUsers(); }
+const saved=localStorage.getItem('chaty_user'); if(saved){ try{ loginUser(JSON.parse(saved)); }catch(e){} }
+document.getElementById('btnLogout').onclick=()=>{ localStorage.removeItem('chaty_user'); location.reload(); };
+function loadUsers(){ onSnapshot(collection(db,"users"), snap=>{ const list=document.getElementById('usersList'); list.innerHTML=""; snap.forEach(d=>{ const u=d.data(); if(u.email===currentUser.email) return; const div=document.createElement('div'); div.className="flex gap-3 p-3 hover:bg-[#202c33] cursor-pointer border-b border-[#222d34]"; div.innerHTML=`<img src="${u.avatar}" class="w-12 h-12 rounded-full"><div><p class="text-white">${u.name}</p><p class="text-xs text-[#8696a0]">${u.email}</p></div>`; div.onclick=()=>openChat(u); list.appendChild(div); }); }); }
+function openChat(user){ selectedUser=user; document.getElementById('chatName').textContent=user.name; document.getElementById('chatAvatar').src=user.avatar; document.getElementById('chatWindow').classList.remove('hidden'); document.getElementById('chatWindow').classList.add('flex'); if(window.innerWidth<768) document.getElementById('chatsTab').classList.add('hidden'); listenMessages(); }
+document.getElementById('backToList').onclick=()=>{ document.getElementById('chatWindow').classList.add('hidden'); document.getElementById('chatsTab').classList.remove('hidden'); };
+function listenMessages(){ if(!selectedUser) return; const chatId=[currentUser.email,selectedUser.email].sort().join('_'); const q=query(collection(db,"chats",chatId,"messages"), orderBy("timestamp","asc")); onSnapshot(q, snap=>{ const div=document.getElementById('messages'); div.innerHTML=""; snap.forEach(d=>{ const m=d.data(); const isMe=m.sender===currentUser.email; const time=m.timestamp?new Date(m.timestamp.toDate()).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):"now"; const el=document.createElement('div'); el.className=`flex ${isMe?'justify-end':'justify-start'}`; el.innerHTML=`<div class="${isMe?'bg-[#005c4b]':'bg-[#202c33]'} text-white rounded-lg px-3 py-2 max-w-[75%]"><div>${m.text}</div><div class="text-[10px] text-[#8696a0] text-right">${time}</div></div>`; div.appendChild(el); }); div.scrollTop=div.scrollHeight; }); }
+async function sendMessage(text){ if(!selectedUser) return alert("Select user first"); const chatId=[currentUser.email,selectedUser.email].sort().join('_'); await addDoc(collection(db,"chats",chatId,"messages"), {sender:currentUser.email,text,timestamp:serverTimestamp()}); }
+document.getElementById('sendBtn').onclick=()=>{ const i=document.getElementById('msgInput'); if(i.value.trim()){ sendMessage(i.value.trim()); i.value=""; } };
+document.getElementById('msgInput').onkeydown=e=>{ if(e.key==="Enter") document.getElementById('sendBtn').click(); };
+document.querySelectorAll('.tabBtn').forEach(b=>{ b.onclick=()=>{ document.querySelectorAll('.tabBtn').forEach(x=>x.classList.remove('border-[#00a884]','text-white')); b.classList.add('border-[#00a884]','text-white'); const tab=b.dataset.tab; document.getElementById('chatsTab').classList.add('hidden'); document.getElementById('statusTab').classList.add('hidden'); document.getElementById('callsTab').classList.add('hidden'); document.getElementById('chatWindow').classList.add('hidden'); if(tab==='chats'){ document.getElementById('chatsTab').classList.remove('hidden'); document.getElementById('chatWindow').classList.remove('hidden'); document.getElementById('chatWindow').classList.add('flex'); } if(tab==='status') document.getElementById('statusTab').classList.remove('hidden'); if(tab==='calls') document.getElementById('callsTab').classList.remove('hidden'); }; });
+</script>
+</body>
+</html>
