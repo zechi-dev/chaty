@@ -1,37 +1,93 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chaty - Real App</title>
-<meta name="theme-color" content="#6c5ce7">
+<title>Chaty</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif}
-body{background:#0f0f13;color:#fff;min-height:100vh;display:flex;flex-direction:column}
-.header{padding:16px;background:#1e1e26;border-bottom:1px solid #2d2d3a;display:flex;justify-content:space-between;align-items:center}
-.logo{font-weight:900;font-size:22px}.logo span{color:#a29bfe}
-.btn{background:#6c5ce7;color:#fff;border:0;padding:14px;border-radius:12px;width:100%;font-weight:700;cursor:pointer;font-size:15px}
-.input{width:100%;background:#12121a;border:1px solid #2d2d3a;color:#fff;padding:14px;border-radius:12px;margin:8px 0;font-size:15px}
-.card{background:#1e1e26;border:1px solid #2d2d3a;border-radius:20px;padding:24px;margin:16px;max-width:420px;width:100%}
-.center{display:flex;justify-content:center;align-items:center;flex:1;flex-direction:column;padding:20px}
-.tabs{display:flex;gap:8px;background:#12121a;padding:6px;border-radius:12px;margin-bottom:20px}
-.tab{flex:1;padding:10px;text-align:center;border-radius:8px;cursor:pointer;font-weight:600}
-.tab.active{background:#6c5ce7}
-.hidden{display:none!important}
-.messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
-.msg{max-width:78%;padding:10px 14px;border-radius:18px;font-size:14px;line-height:1.4}
-.msg.me{align-self:flex-end;background:#6c5ce7;border-bottom-right-radius:4px}
-.msg.other{align-self:flex-start;background:#1e1e26;border:1px solid #2d2d3a;border-bottom-left-radius:4px}
-.composer{padding:12px;background:#1e1e26;border-top:1px solid #2d2d3a;display:flex;gap:10px;align-items:center}
-.composer input{flex:1;margin:0}
+*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
+body{background:#0f0f13;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center}
+.card{background:#1e1e26;padding:24px;border-radius:20px;width:90%;max-width:380px;border:1px solid #2d2d3a}
+input{width:100%;padding:14px;margin:8px 0;background:#12121a;border:1px solid #2d2d3a;color:#fff;border-radius:12px}
+button{width:100%;padding:14px;background:#6c5ce7;color:#fff;border:0;border-radius:12px;font-weight:700;margin-top:8px;cursor:pointer}
+.tab{display:flex;gap:8px;background:#12121a;padding:5px;border-radius:10px;margin-bottom:16px}
+.tab div{flex:1;text-align:center;padding:8px;border-radius:8px;cursor:pointer}
+.active{background:#6c5ce7!important}
+.hidden{display:none}
+#chat{position:fixed;inset:0;background:#0f0f13;display:flex;flex-direction:column}
+#msgs{flex:1;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:8px}
+.m{padding:10px 14px;border-radius:16px;max-width:80%;font-size:14px}
+.me{align-self:flex-end;background:#6c5ce7}
+.other{align-self:flex-start;background:#1e1e26;border:1px solid #2d2d3a}
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
-<div id="authScreen" class="center">
-<div style="font-weight:900;font-size:32px;margin-bottom:8px">chaty<span style="color:#a29bfe">.app</span></div>
-<div class="card">
-<div class="tabs"><div id="tL" class="tab active" onclick="showTab('L')">Login</div><div id="tR" class="tab" onclick="showTab('R')">Register</div></div>
-<div id="boxL"><input id="lE" class="input" placeholder="Email"><input id="lP" class="input" type="password" placeholder="Password"><button class="btn" onclick="doLogin()">Login to Chaty</button><p id="lErr" style="color:#ff7675;font-size:12px;margin-top:8px"></p></div>
-<div id="boxR" class="hidden"><input id="rN" class="input" placeholder="Your Name"><input id="rE" class="input" placeholder="Email"><input id="rP" class="input" type="password" placeholder="Password (6+ chars)"><button class="btn" onclick="doReg()">Create Account</button><p id="rErr" style="color:#ff7675;font-size:12px;margin-top:8px"></p></div>
-<div id="boxV" class="hidden"><h3 style="margin-bottom:8px">Verify Email</h3><p style="font-size:12px;opacity:.7;margin-bottom:10px">Code sent to <b id="vEmail"></b></p><input id="vC" class="input" placeholder="123456" type="number"><button class="btn" onclick="doVerify()">Verify & Enter</button><p onclick="doResend()" style="text-align:center;font-size:12px;margin
+
+<div id="auth" class="card">
+<h1 style="text-align:center;margin-bottom:16px">chaty<span style="color:#a29bfe">.app</span></h1>
+<div class="tab"><div id="tL" class="active" onclick="showL()">Login</div><div id="tR" onclick="showR()">Register</div></div>
+<div id="boxL"><input id="le" placeholder="Email"><input id="lp" type="password" placeholder="Password"><button onclick="login()">Login</button><p id="leErr" style="color:#ff7675;font-size:12px;margin-top:8px"></p></div>
+<div id="boxR" class="hidden"><input id="rn" placeholder="Name"><input id="re" placeholder="Email"><input id="rp" type="password" placeholder="Password (6+ chars)"><button onclick="reg()">Create Account</button><p id="reErr" style="color:#ff7675;font-size:12px;margin-top:8px"></p></div>
+</div>
+
+<div id="chat" class="hidden">
+<div style="padding:14px;background:#1e1e26;display:flex;justify-content:space-between"><b>chaty.app</b><button onclick="logout()" style="width:auto;padding:6px 12px;background:#2d2d3a">Logout</button></div>
+<div id="msgs"></div>
+<div style="padding:12px;display:flex;gap:8px;background:#1e1e26"><input id="mi" placeholder="Message..." style="margin:0;flex:1"><button onclick="send()" style="width:50px;margin:0">></button></div>
+</div>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getFirestore,collection,addDoc,query,orderBy,onSnapshot,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,onAuthStateChanged,updateProfile} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA29zVf5kMGWWbf03njNONAl8uzCD2GnYk",
+  authDomain: "chaty-a4725.firebaseapp.com",
+  projectId: "chaty-a4725",
+  storageBucket: "chaty-a4725.firebasestorage.app",
+  messagingSenderId: "1005836465051",
+  appId: "1:1005836465051:web:228af3826e8419ab6fa73e",
+  measurementId: "G-RZ71SXL80R"
+};
+
+const app=initializeApp(firebaseConfig);
+const db=getFirestore(app);
+const auth=getAuth(app);
+let unsub=null;
+
+window.showL=()=>{boxL.classList.remove('hidden');boxR.classList.add('hidden');tL.classList.add('active');tR.classList.remove('active')}
+window.showR=()=>{boxR.classList.remove('hidden');boxL.classList.add('hidden');tR.classList.add('active');tL.classList.remove('active')}
+
+window.reg=async()=>{
+ const n=rn.value.trim(),e=re.value.trim(),p=rp.value;
+ if(!n||!e||p.length<6){reErr.textContent='Fill all, password 6+ chars';return}
+ reErr.textContent='Creating...';
+ try{const c=await createUserWithEmailAndPassword(auth,e,p);await updateProfile(c.user,{displayName:n});}
+ catch(err){reErr.textContent=err.message}
+}
+
+window.login=async()=>{
+ try{await signInWithEmailAndPassword(auth,le.value.trim(),lp.value)}
+ catch(err){leErr.textContent=err.message}
+}
+
+window.logout=async()=>{if(unsub)unsub();await signOut(auth)}
+window.send=async()=>{
+ const t=mi.value.trim();if(!t)return;mi.value='';
+ await addDoc(collection(db,'messages'),{text:t,uid:auth.currentUser.uid,name:auth.currentUser.displayName||auth.currentUser.email,createdAt:serverTimestamp()})
+}
+
+onAuthStateChanged(auth,user=>{
+ if(user){
+  auth.classList.add('hidden');chat.classList.remove('hidden');
+  const q=query(collection(db,'messages'),orderBy('createdAt','asc'));
+  unsub=onSnapshot(q,snap=>{
+   msgs.innerHTML='';snap.forEach(d=>{const m=d.data();const div=document.createElement('div');div.className='m '+(m.uid===user.uid?'me':'other');div.textContent=m.name+': '+m.text;msgs.appendChild(div)});
+   msgs.scrollTop=msgs.scrollHeight;
+  })
+ }else{auth.classList.remove('hidden');chat.classList.add('hidden')}
+})
+</script>
+</body>
+</html>
