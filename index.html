@@ -15,10 +15,12 @@ button{width:100%;padding:14px;background:#6c5ce7;color:#fff;border:0;border-rad
 .active{background:#6c5ce7!important}
 .hidden{display:none}
 #chat{position:fixed;inset:0;background:#0f0f13;display:flex;flex-direction:column}
-#msgs{flex:1;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:8px}
-.m{padding:10px 14px;border-radius:16px;max-width:80%;font-size:14px}
+#msgs{flex:1;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:8px;justify-content:center;align-items:center}
+.m{padding:12px 16px;border-radius:16px;max-width:80%;font-size:14px;word-break:break-word}
 .me{align-self:flex-end;background:#6c5ce7}
 .other{align-self:flex-start;background:#1e1e26;border:1px solid #2d2d3a}
+.welcome{text-align:center;opacity:0.6;padding:20px}
+.welcome h2{margin-bottom:10px;color:#a29bfe}
 </style>
 </head>
 <body>
@@ -31,9 +33,9 @@ button{width:100%;padding:14px;background:#6c5ce7;color:#fff;border:0;border-rad
 </div>
 
 <div id="chat" class="hidden">
-<div style="padding:14px;background:#1e1e26;display:flex;justify-content:space-between"><b>chaty.app</b><button onclick="logout()" style="width:auto;padding:6px 12px;background:#2d2d3a">Logout</button></div>
-<div id="msgs"></div>
-<div style="padding:12px;display:flex;gap:8px;background:#1e1e26"><input id="mi" placeholder="Message..." style="margin:0;flex:1"><button onclick="send()" style="width:50px;margin:0">></button></div>
+<div style="padding:14px;background:#1e1e26;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #2d2d3a"><b>chaty<span style="color:#a29bfe">.app</span></b><div style="display:flex;gap:10px;align-items:center"><span id="userEmail" style="font-size:11px;opacity:0.6"></span><button onclick="logout()" style="width:auto;padding:6px 14px;background:#2d2d3a;font-size:12px">Logout</button></div></div>
+<div id="msgs"><div class="welcome"><h2>Welcome to Chaty! 👋</h2><p>No messages yet.<br>Be the first to send a message!</p><p style="margin-top:20px;font-size:12px">Type below and tap ></p></div></div>
+<div style="padding:12px;display:flex;gap:8px;background:#1e1e26;border-top:1px solid #2d2d3a"><input id="mi" placeholder="Type a message..." style="margin:0;flex:1"><button onclick="send()" style="width:50px;margin:0">></button></div>
 </div>
 
 <script type="module">
@@ -47,47 +49,4 @@ const firebaseConfig = {
   projectId: "chaty-a4725",
   storageBucket: "chaty-a4725.firebasestorage.app",
   messagingSenderId: "1005836465051",
-  appId: "1:1005836465051:web:228af3826e8419ab6fa73e",
-  measurementId: "G-RZ71SXL80R"
-};
-
-const app=initializeApp(firebaseConfig);
-const db=getFirestore(app);
-const auth=getAuth(app);
-let unsub=null;
-
-window.showL=()=>{boxL.classList.remove('hidden');boxR.classList.add('hidden');tL.classList.add('active');tR.classList.remove('active')}
-window.showR=()=>{boxR.classList.remove('hidden');boxL.classList.add('hidden');tR.classList.add('active');tL.classList.remove('active')}
-
-window.reg=async()=>{
- const n=rn.value.trim(),e=re.value.trim(),p=rp.value;
- if(!n||!e||p.length<6){reErr.textContent='Fill all, password 6+ chars';return}
- reErr.textContent='Creating...';
- try{const c=await createUserWithEmailAndPassword(auth,e,p);await updateProfile(c.user,{displayName:n});}
- catch(err){reErr.textContent=err.message}
-}
-
-window.login=async()=>{
- try{await signInWithEmailAndPassword(auth,le.value.trim(),lp.value)}
- catch(err){leErr.textContent=err.message}
-}
-
-window.logout=async()=>{if(unsub)unsub();await signOut(auth)}
-window.send=async()=>{
- const t=mi.value.trim();if(!t)return;mi.value='';
- await addDoc(collection(db,'messages'),{text:t,uid:auth.currentUser.uid,name:auth.currentUser.displayName||auth.currentUser.email,createdAt:serverTimestamp()})
-}
-
-onAuthStateChanged(auth,user=>{
- if(user){
-  auth.classList.add('hidden');chat.classList.remove('hidden');
-  const q=query(collection(db,'messages'),orderBy('createdAt','asc'));
-  unsub=onSnapshot(q,snap=>{
-   msgs.innerHTML='';snap.forEach(d=>{const m=d.data();const div=document.createElement('div');div.className='m '+(m.uid===user.uid?'me':'other');div.textContent=m.name+': '+m.text;msgs.appendChild(div)});
-   msgs.scrollTop=msgs.scrollHeight;
-  })
- }else{auth.classList.remove('hidden');chat.classList.add('hidden')}
-})
-</script>
-</body>
-</html>
+  appId: "1:1005836465051:web:228af3826e8419
